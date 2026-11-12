@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* Mirrors src/design/tokens.ts. Keep in sync; tokens.test.ts verifies contrast on the TS values. */
+:root {
+  --void: #0d0a14;
+  --crypt: #17111f;
+  --crypt-raised: #231a30;
+  --crypt-border: #705a96;
+  --parchment: #f1e6cf;
+  --parchment-dim: #c9bda4;
+  --candle: #ffb44a;
+  --ember: #ff7a3d;
+  --ghost: #4fd1c5;
+  --blood: #ff7b8e;
+  --rune: #a58cf0;
+  --moon: #e8eefc;
+}
+
+@theme inline {
+  --color-void: var(--void);
+  --color-crypt: var(--crypt);
+  --color-crypt-raised: var(--crypt-raised);
+  --color-crypt-border: var(--crypt-border);
+  --color-parchment: var(--parchment);
+  --color-parchment-dim: var(--parchment-dim);
+  --color-candle: var(--candle);
+  --color-ember: var(--ember);
+  --color-ghost: var(--ghost);
+  --color-blood: var(--blood);
+  --color-rune: var(--rune);
+  --color-moon: var(--moon);
+  --font-display: var(--font-cinzel);
+  --font-body: var(--font-spectral);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--void);
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgb(112 90 150 / 0.35), transparent 60%),
+    radial-gradient(ellipse at 90% 110%, rgb(79 209 197 / 0.12), transparent 55%);
+  background-attachment: fixed;
+  color: var(--parchment);
+  font-family: var(--font-spectral), Georgia, serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-cinzel), Georgia, serif;
+  letter-spacing: 0.02em;
+}
+
+/* Visible focus ring for every interactive element (candle color, 3:1 on void/crypt). */
+:where(a, button, input, select, textarea, summary, dialog, [tabindex]):focus-visible {
+  outline: 3px solid var(--candle);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.06, 0.94) translateY(0.5px);
+    opacity: 0.92;
+  }
+  50% {
+    transform: scale(0.96, 1.05) translateY(-0.5px);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(1.03, 0.98) translateY(0);
+    opacity: 0.95;
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translateX(-4%);
+  }
+  50% {
+    transform: translateX(4%);
+  }
+  100% {
+    transform: translateX(-4%);
+  }
+}
+
+.flame {
+  transform-origin: 50% 90%;
+  animation: flicker 1.6s ease-in-out infinite;
+}
+
+.fog {
+  animation: drift 28s ease-in-out infinite;
+}
+
+/* Reduced motion: remove decorative animation and transitions. */
+@media (prefers-reduced-motion: reduce) {
+  .flame,
+  .fog {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Screen-reader-only helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
