@@ -5,15 +5,52 @@ on:
     branches: [main]
   pull_request:
 
+# Least privilege: this workflow only needs to read the repository.
+permissions:
+  contents: read
+
+# Cancel superseded PR runs, but never cancel a run on main.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  # NOTE: the job id "check" is a required status check in branch protection. Do not rename it.
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Empty on forks and until the secret is added; the Sonar step is skipped then.
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0 # full history lets SonarQube Cloud attribute new code correctly
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
-      - run: npm run check
-      - run: npm run build
+
+      # Lifecycle scripts of dependencies are not run (SonarCloud S6505).
+      # The Prisma client is generated explicitly in the next step instead.
+      - run: npm ci --ignore-scripts
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Typecheck, lint, tests with coverage gate, schema and repo guards
+        run: npm run check
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Build
+        run: npm run build
+
+      # CI-based analysis uploads the coverage report (coverage/lcov.info) to SonarQube Cloud.
+      # Requires: SONAR_TOKEN repository secret AND Automatic Analysis turned off for the project.
+      - name: SonarQube Cloud scan
+        if: ${{ env.SONAR_TOKEN != '' }}
+        uses: SonarSource/sonarqube-scan-action@v8.4.1
