@@ -1,12 +1,27 @@
 version: 1
+# AWS Amplify Hosting build spec (Next.js SSR).
+#
+# Node: Amplify's build image supports Node 16/18/20/22 only (24 is rejected).
+#   `nvm use` cannot override that. Pin Node 22 in the console instead:
+#   Amplify > App > Hosting > Build settings > Build image settings > Live package updates > Node.js = 22
+#   Our CI and local dev use Node 24; the app does not use any Node 24-only APIs.
+#
+# Next.js 16: Amplify documents managed SSR for Next 12-15. Next 16 builds, but watch the
+#   220 MB SSR output cap in the build log (our traced server bundle is ~15 MB).
+#
+# Runtime env vars: Amplify does not pass console environment variables to the SSR server
+#   at runtime. The build step below writes the allowed ones into .env.production,
+#   which Next.js loads at runtime. Only list variables the server needs. No secrets in this file.
 frontend:
   phases:
     preBuild:
       commands:
-        - nvm use 24 || true
-        - npm ci
+        - node --version
+        - npm ci --ignore-scripts
+        - npm run db:generate
     build:
       commands:
+        - env | grep -E '^(AWS_REGION|DATABASE_URL|GUEST_TOKEN_CAP)=' >> .env.production || true
         - npm run build
   artifacts:
     baseDirectory: .next
@@ -14,5 +29,4 @@ frontend:
       - "**/*"
   cache:
     paths:
-      - node_modules/**/*
       - .next/cache/**/*

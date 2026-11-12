@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Watch CI and fix Sonar issues after a PR",
+      "trigger": "PostToolUse",
+      "description": "After a pull request is created with gh, watch GitHub Actions, then read SonarQube Cloud's findings for the PR and fix them.",
+      "matcher": "execute_pwsh|shell|bash",
+      "action": {
+        "type": "agent",
+        "prompt": "Only act if the shell command that just ran contained `gh pr create` and it succeeded (it printed a pull request URL). For any other command, do nothing and do not mention this hook.\n\nIf it applies, work through these stages in order.\n\nSTAGE 1: GitHub Actions\n1. Run `node scripts/watch-ci.mjs` from the repo root. It finds the CI run for the current commit, watches it, and prints failed-step logs on failure. Exit 0 = passed, 1 = failed, 2 = no run found.\n2. If it fails (exit 1): find the root cause from the logs. CI starts from a clean checkout, so reproduce locally from a clean state first (copy the tracked files to a fresh short path such as C:\\qhc, then `npm ci --ignore-scripts`, `npm run db:generate`, `npm run check`, `npm run build`) before changing anything. On Windows, if `npm ci` fails with ENOTEMPTY, retry with `--prefer-offline --maxsockets=2`; that is file locking, not a repo bug. Fix the cause as its own small commit (message under 50 characters), push, and run the watch script again.\n3. If it exits 2 (no run found), check that the PR exists and the branch was pushed, report what you found, and stop.\n\nSTAGE 2: SonarQube Cloud (only after stage 1 passes)\n1. Run `node scripts/sonar-issues.mjs`. It waits for the SonarQube Cloud check on the current commit, then prints the quality gate and every open issue for this PR, worst first. Exit 0 = no issues, 1 = issues found, 2 = could not get results.\n2. If there are issues, fix each one at its root cause, grouped by rule, one commit per rule (message under 50 characters). Read the rule's meaning from the message and fix the code properly. Run `npm run check` before each push.\n3. Do NOT silence a finding with `// NOSONAR`, new exclusions in `sonar-project.properties`, relaxed thresholds, or deleted tests to make it go away. If you believe a finding is a false positive or the fix would be worse than the issue, stop and explain it to the user and let them decide.\n4. Push, then run `node scripts/sonar-issues.mjs` again (Sonar re-analyses on each push). Repeat at most two fix rounds.\n5. If the script exits 2, say so plainly and do not guess at the results.\n\nSTAGE 3: Report\nTell the user, briefly: CI result, the Sonar quality gate and issue count before and after, the commits you made, and anything you chose not to fix and why. Include the PR URL. If CI or Sonar is still failing after two attempts, stop and explain the root cause and the options instead of continuing."
+      }
+    }
+  ]
+}

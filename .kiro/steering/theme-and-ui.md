@@ -25,7 +25,7 @@ CandleHp, Hourglass, GrimoirePanel, RuneButton, MoonMeter, ScrollModal. Reuse th
 
 ## Accessibility
 - Respect `prefers-reduced-motion` (CSS and Framer Motion `useReducedMotion`).
-- Meters use `role="meter"` with `aria-valuenow/min/max` and a text label.
+- Meters use a visually hidden native `<meter>` (min, max, value, an accessible name and `aria-valuetext`); the SVG art is `aria-hidden`. Prefer the native element over `role="meter"` (SonarCloud rule S6819).
 - Everything interactive is keyboard reachable with a visible focus ring (candle color).
 - Decorative art gets `alt=""` or `aria-hidden`.
 - Sound is off by default or has a visible mute toggle. Only CC0/royalty-free audio. No copyrighted music.

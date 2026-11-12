@@ -18,7 +18,7 @@ A deployable Next.js app with the "Haunted Library" design system: tokens, an ac
 
 #### Acceptance Criteria
 1. The kit SHALL include CandleHp, Hourglass, GrimoirePanel, RuneButton, MoonMeter and ScrollModal.
-2. WHEN a meter component renders THEN it SHALL expose `role="meter"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and an accessible name.
+2. WHEN a meter component renders THEN it SHALL expose a native `<meter>` (visually hidden) with `min`, `max`, `value`, an accessible name and `aria-valuetext`, while the decorative art is hidden from assistive tech.
 3. WHEN the user tabs through interactive components THEN a visible focus ring SHALL appear.
 4. ScrollModal SHALL trap focus, close on Escape and return focus to the opener.
 

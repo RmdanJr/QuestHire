@@ -10,14 +10,14 @@ type HourglassProps = {
 
 /**
  * Countdown to the real interview. The top bulb holds the sand that is left.
- * Exposed as a meter whose value text says how many days remain.
+ * A visually hidden native <meter> carries the semantics; the glass is decorative.
  */
 export function Hourglass({
   daysLeft,
   totalDays,
   label = "Time until your interview",
   className,
-}: HourglassProps) {
+}: Readonly<HourglassProps>) {
   const fill = hourglassFill(daysLeft, totalDays);
   const safeTotal = Math.max(0, Math.floor(totalDays));
   const safeLeft = Math.min(safeTotal, Math.max(0, Math.floor(daysLeft)));
@@ -27,17 +27,17 @@ export function Hourglass({
 
   return (
     <div className={["inline-flex flex-col items-center gap-1", className].filter(Boolean).join(" ")}>
-      <svg
-        role="meter"
+      <meter
+        className="sr-only"
+        min={0}
+        max={safeTotal}
+        value={safeLeft}
         aria-label={label}
-        aria-valuemin={0}
-        aria-valuemax={safeTotal}
-        aria-valuenow={safeLeft}
         aria-valuetext={text}
-        viewBox="0 0 48 72"
-        width="48"
-        height="72"
       >
+        {text}
+      </meter>
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 48 72" width="48" height="72">
         <defs>
           <clipPath id="top-bulb">
             <path d="M8 6 H40 L26 34 H22 Z" />
@@ -56,7 +56,9 @@ export function Hourglass({
         </g>
         <path d="M8 6 H40 L26 34 H22 Z M22 38 H26 L40 66 H8 Z" fill="none" stroke="var(--parchment-dim)" strokeWidth="1.5" />
       </svg>
-      <span className="text-sm text-parchment-dim">{text}</span>
+      <span aria-hidden="true" className="text-sm text-parchment-dim">
+        {text}
+      </span>
     </div>
   );
 }

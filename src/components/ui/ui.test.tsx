@@ -15,14 +15,14 @@ describe("CandleHp", () => {
   it("exposes a meter with lit candles as the value", () => {
     render(<CandleHp current={3} max={5} label="Your hit points" />);
     const meter = screen.getByRole("meter", { name: "Your hit points" });
-    expect(meter).toHaveAttribute("aria-valuenow", "3");
-    expect(meter).toHaveAttribute("aria-valuemax", "5");
+    expect(meter).toHaveAttribute("value", "3");
+    expect(meter).toHaveAttribute("max", "5");
     expect(meter).toHaveAttribute("aria-valuetext", "3 of 5 candles lit");
   });
 
   it("clamps out-of-range HP", () => {
     render(<CandleHp current={99} max={4} />);
-    expect(screen.getByRole("meter")).toHaveAttribute("aria-valuenow", "4");
+    expect(screen.getByRole("meter")).toHaveAttribute("value", "4");
   });
 
   it("renders one candle per max HP and marks lit ones", () => {
@@ -37,7 +37,7 @@ describe("Hourglass", () => {
   it("announces days left", () => {
     render(<Hourglass daysLeft={6} totalDays={14} />);
     const meter = screen.getByRole("meter", { name: "Time until your interview" });
-    expect(meter).toHaveAttribute("aria-valuenow", "6");
+    expect(meter).toHaveAttribute("value", "6");
     expect(meter).toHaveAttribute("aria-valuetext", "6 days left");
   });
 
@@ -51,13 +51,13 @@ describe("MoonMeter", () => {
   it("reports readiness and phase", () => {
     render(<MoonMeter value={50} />);
     const meter = screen.getByRole("meter", { name: "Readiness" });
-    expect(meter).toHaveAttribute("aria-valuenow", "50");
+    expect(meter).toHaveAttribute("value", "50");
     expect(meter).toHaveAttribute("aria-valuetext", "50 percent, first quarter");
   });
 
   it("clamps above 100", () => {
     render(<MoonMeter value={250} />);
-    expect(screen.getByRole("meter")).toHaveAttribute("aria-valuenow", "100");
+    expect(screen.getByRole("meter")).toHaveAttribute("value", "100");
   });
 });
 

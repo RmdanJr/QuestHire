@@ -15,7 +15,7 @@ type ScrollModalProps = {
  * Lore scroll. Built on the native <dialog>, which gives us a focus trap,
  * Escape to close and focus return to the opener without extra code.
  */
-export function ScrollModal({ open, onClose, title, children, footer }: ScrollModalProps) {
+export function ScrollModal({ open, onClose, title, children, footer }: Readonly<ScrollModalProps>) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 

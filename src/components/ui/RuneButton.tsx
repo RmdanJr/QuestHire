@@ -16,7 +16,7 @@ export function RuneButton({
   className,
   type = "button",
   ...props
-}: RuneButtonProps) {
+}: Readonly<RuneButtonProps>) {
   return (
     <button
       type={type}
