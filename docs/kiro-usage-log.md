@@ -10,7 +10,7 @@ A running record of how Kiro was used to build QuestHire. It feeds the Kiroween 
 - Result: a 15-task plan with explicit cut order, saved as steering (`.kiro/steering/roadmap.md`) so any new chat can start a task.
 
 ### Steering
-- `product.md`, `theme-and-ui.md`, `engineering-conventions.md` (always), `bedrock-schema-rules.md` (fileMatch on `src/lib/llm/**`).
+- `product.md`, `theme-and-ui.md`, `tech.md` (always), `bedrock-schema-rules.md` (fileMatch on `src/lib/llm/**`).
 - Added later: `roadmap.md`, `kiro-workflow.md`, `dev-environment.md` (always), and `aws-and-deployment.md`, `research-and-licenses.md`, `kiroween-submission.md` (auto inclusion).
 - Strategy: always-on files stay short and rule-like; reference material is auto-included only when relevant; hard-won gotchas (PowerShell, Next 16, Prisma 7, Amplify) are written down so they are not rediscovered.
 
@@ -47,3 +47,8 @@ A running record of how Kiro was used to build QuestHire. It feeds the Kiroween 
 - Moved the helper scripts into two workspace skills: `.kiro/skills/pr-checks` (CI watch and SonarQube Cloud report) and `.kiro/skills/submission-guard` (submission and privacy checks). Each has a `SKILL.md` that tells the agent when and how to use it.
 - Checked against the Kiro docs first (via the `introspect` sub-agent): skills are the documented place for committed scripts; there is no `.kiro/scripts/` convention, and powers install globally rather than per project.
 - Hooks now call `npm run` aliases instead of file paths, and both custom agents load the skills through `skill://` resources.
+- Briefly moved the code out to a `tools/` folder after finding that SonarQube Cloud skips dot folders (it indexed 6 scripts on `main` and none under `.kiro`), then moved it back by the user's decision: Kiro tooling stays in skills, and ESLint, tests and the coverage gate cover it instead of Sonar. Recorded in `dev-environment.md`.
+
+### Steering and spec practice (validated against the Kiro docs)
+- Renamed `engineering-conventions.md` to `tech.md` and added `structure.md`, matching Kiro's default foundation steering files (`product.md`, `tech.md`, `structure.md`).
+- Spec policy written into `kiro-workflow.md`: one feature spec per roadmap task, created in a Kiro spec session when the task starts (docs recommend multiple feature specs; up-front vs just-in-time is not documented). Requirements-first by default; design-first for Task 3 and Task 10; Quick Spec only for small work. Task 1's spec is an after-the-fact record, not a spec that guided the work.

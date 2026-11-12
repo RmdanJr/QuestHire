@@ -8,7 +8,8 @@ Everything Kiro uses to build QuestHire. This folder must stay committed (Kirowe
 | [`product.md`](steering/product.md) | always | What QuestHire is and its hard rules |
 | [`roadmap.md`](steering/roadmap.md) | always | 15-task plan, decisions, current status, how to work on a task |
 | [`kiro-workflow.md`](steering/kiro-workflow.md) | always | How to use Kiro features and keep this folder organized |
-| [`engineering-conventions.md`](steering/engineering-conventions.md) | always | Stack and coding rules |
+| [`tech.md`](steering/tech.md) | always | Stack and coding rules |
+| [`structure.md`](steering/structure.md) | always | Folder layout and where new code goes |
 | [`dev-environment.md`](steering/dev-environment.md) | always | Windows, PowerShell and tooling gotchas |
 | [`theme-and-ui.md`](steering/theme-and-ui.md) | always | Haunted Library design system and accessibility |
 | [`bedrock-schema-rules.md`](steering/bedrock-schema-rules.md) | fileMatch `src/lib/llm/**` | Bedrock structured-output limits |
@@ -24,7 +25,7 @@ Everything Kiro uses to build QuestHire. This folder must stay committed (Kirowe
 New specs follow `task-NN-<name>` to match the roadmap.
 
 ## skills/
-Workspace skills (`SKILL.md` plus a `scripts/` folder), the documented place for committed, executable helpers. Tooling still points at these paths: `package.json` scripts, `vitest.config.mts` coverage, `sonar-project.properties` sources, and the tests in `tests/`.
+Workspace skills (`SKILL.md` plus a `scripts/` folder), the documented place for committed, executable helpers. `package.json` scripts, `vitest.config.mts` coverage and the tests in `tests/` point at these paths. SonarQube Cloud skips dot folders, so these scripts are checked by ESLint, tests and the coverage gate, not by Sonar (an accepted trade-off).
 
 | Skill | Command | What it does |
 |---|---|---|
