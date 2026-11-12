@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Update roadmap after a spec task",
+      "trigger": "PostTaskExec",
+      "description": "After a spec task is completed, keep the roadmap status, the spec's tasks.md and the Kiro usage log current.",
+      "action": {
+        "type": "agent",
+        "prompt": "A spec task was just marked completed. Keep the project records current, briefly:\n1. In the spec's `tasks.md`, make sure the completed task is ticked.\n2. If this finished a whole roadmap task, update \"Current status\" in `.kiro/steering/roadmap.md` (Done / Next) and mark the task DONE in the task breakdown.\n3. Append one or two lines to `docs/kiro-usage-log.md` about any Kiro feature that mattered for this task (spec, hook, steering, agent, sub-agent, MCP, power, property-based test) and what it changed.\n4. If a new gotcha or research finding came up, add it to `dev-environment.md` or `research-and-licenses.md`.\n5. If you added, renamed or removed anything in `.kiro`, update `.kiro/README.md` and the layout in `kiro-workflow.md`.\nDo not invent progress: only record what actually happened in this session. Never write secrets or the AWS account ID."
+      }
+    }
+  ]
+}

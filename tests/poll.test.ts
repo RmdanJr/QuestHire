@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { pollUntil } from "../scripts/lib/poll.mjs";
+import { pollUntil } from "../.kiro/skills/pr-checks/scripts/lib/poll.mjs";
 
 /** A fake clock: `wait` advances time, so tests are instant and deterministic. */
 function fakeClock() {

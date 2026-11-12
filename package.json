@@ -13,10 +13,10 @@
     "test:watch": "vitest",
     "db:validate": "prisma validate",
     "db:generate": "prisma generate",
-    "check:kiro": "node scripts/check-kiro.mjs",
-    "ci:watch": "node scripts/watch-ci.mjs",
-    "sonar:issues": "node scripts/sonar-issues.mjs",
-    "check": "npm run typecheck && npm run lint && npm run test:coverage && npm run db:validate && npm run check:kiro",
+    "check:submission": "node .kiro/skills/submission-guard/scripts/check-submission.mjs",
+    "ci:watch": "node .kiro/skills/pr-checks/scripts/watch-ci.mjs",
+    "sonar:issues": "node .kiro/skills/pr-checks/scripts/sonar-issues.mjs",
+    "check": "npm run typecheck && npm run lint && npm run test:coverage && npm run db:validate && npm run check:submission",
     "postinstall": "prisma generate"
   },
   "dependencies": {

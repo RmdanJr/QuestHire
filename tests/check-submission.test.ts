@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { checkRepo, findProblems } from "../scripts/check-kiro.mjs";
+import { checkRepo, findProblems } from "../.kiro/skills/submission-guard/scripts/check-submission.mjs";
 
 const goodIgnore = ["/node_modules", "/.local/", ".env*"].join("\n");
 

@@ -33,7 +33,7 @@ Open http://localhost:3000. The component kit is at http://localhost:3000/galler
 | `npm run check` | Typecheck, lint, tests, Prisma validate and the repo guard |
 | `npm run test` | Vitest unit and property-based tests |
 | `npm run build` | Generate the Prisma client and build for production |
-| `npm run check:kiro` | Confirms `/.kiro` is tracked, a LICENSE exists, and local fixtures stay ignored |
+| `npm run check:submission` | Confirms `/.kiro` is tracked, a LICENSE exists, and local fixtures stay ignored |
 
 ## Stack
 

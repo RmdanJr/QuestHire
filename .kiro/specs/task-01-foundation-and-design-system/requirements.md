@@ -35,4 +35,4 @@ A deployable Next.js app with the "Haunted Library" design system: tokens, an ac
 ### Requirement 5: Submission guards
 #### Acceptance Criteria
 1. The repo SHALL contain a detectable MIT LICENSE and a committed `/.kiro` directory.
-2. `.kiro` SHALL NOT be gitignored, and `.local/` (personal fixtures) SHALL be gitignored. `npm run check:kiro` SHALL enforce both.
+2. `.kiro` SHALL NOT be gitignored, and `.local/` (personal fixtures) SHALL be gitignored. `npm run check:submission` SHALL enforce both.

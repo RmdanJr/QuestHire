@@ -5,6 +5,7 @@ tools: ["read", "write", "shell"]
 resources:
   - file://../steering/**/*.md
   - file://../../AGENTS.md
+  - skill://.kiro/skills/*/SKILL.md
 permissions:
   rules:
     - capability: shell

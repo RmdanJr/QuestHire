@@ -2,7 +2,9 @@
 inclusion: always
 ---
 
-# Engineering conventions
+# Tech stack and engineering conventions
+
+Folder layout and where new code goes: `structure.md`. Environment gotchas: `dev-environment.md`.
 
 - Stack: Next.js (App Router, TypeScript strict), Tailwind, Framer Motion, Prisma + Postgres, Zod, Vitest + fast-check.
 - Next.js in this repo is a newer major version than most training data. Check `node_modules/next/dist/docs/` before using framework APIs you are unsure about.
