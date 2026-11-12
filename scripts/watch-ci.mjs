@@ -11,7 +11,8 @@
  *
  * Requires the GitHub CLI (`gh`) signed in with repo access.
  */
-import { capture, run, sleep } from "./lib/cli.mjs";
+import { capture, run } from "./lib/cli.mjs";
+import { pollUntil } from "./lib/poll.mjs";
 
 const WAIT_FOR_RUN_MS = 120_000;
 const POLL_MS = 5_000;
@@ -26,20 +27,19 @@ function fail(code, message) {
  * @param {string} branch
  * @param {string} sha
  */
-async function findRun(branch, sha) {
-  const deadline = Date.now() + WAIT_FOR_RUN_MS;
-  while (Date.now() < deadline) {
-    const runs = JSON.parse(
-      capture("gh", [
-        "run", "list", "--branch", branch, "--limit", "10",
-        "--json", "databaseId,headSha,status,conclusion,workflowName,event",
-      ]),
-    );
-    const match = runs.find((r) => r.headSha === sha);
-    if (match) return match;
-    await sleep(POLL_MS);
-  }
-  return null;
+function findRun(branch, sha) {
+  return pollUntil(
+    async () => {
+      const runs = JSON.parse(
+        capture("gh", [
+          "run", "list", "--branch", branch, "--limit", "10",
+          "--json", "databaseId,headSha,status,conclusion,workflowName,event",
+        ]),
+      );
+      return runs.find((r) => r.headSha === sha);
+    },
+    { timeoutMs: WAIT_FOR_RUN_MS, intervalMs: POLL_MS },
+  );
 }
 
 async function main() {

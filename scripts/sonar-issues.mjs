@@ -12,7 +12,8 @@
  * The logic lives in scripts/lib/sonar.mjs (unit tested); this file is only I/O glue.
  */
 import { readFileSync } from "node:fs";
-import { capture, sleep } from "./lib/cli.mjs";
+import { capture } from "./lib/cli.mjs";
+import { pollUntil } from "./lib/poll.mjs";
 import { collectReport, findCompletedCheck, parseArgs, parseProjectKey } from "./lib/sonar.mjs";
 
 const WAIT_FOR_CHECK_MS = 300_000;
@@ -24,15 +25,14 @@ async function fetchJson(url) {
   return response.json();
 }
 
-async function waitForSonarCheck(sha) {
-  const deadline = Date.now() + WAIT_FOR_CHECK_MS;
-  while (Date.now() < deadline) {
-    const data = JSON.parse(capture("gh", ["api", `repos/{owner}/{repo}/commits/${sha}/check-runs`]));
-    const check = findCompletedCheck(data);
-    if (check) return check;
-    await sleep(POLL_MS);
-  }
-  return null;
+function waitForSonarCheck(sha) {
+  return pollUntil(
+    async () => {
+      const data = JSON.parse(capture("gh", ["api", `repos/{owner}/{repo}/commits/${sha}/check-runs`]));
+      return findCompletedCheck(data);
+    },
+    { timeoutMs: WAIT_FOR_CHECK_MS, intervalMs: POLL_MS },
+  );
 }
 
 function currentPullRequest() {
