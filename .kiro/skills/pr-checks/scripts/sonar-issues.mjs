@@ -2,14 +2,14 @@
 /**
  * List the SonarQube Cloud issues for the current pull request (or branch).
  *
- * Usage: node scripts/sonar-issues.mjs [--pr <number>] [--branch <name>]
+ * Usage: node .kiro/skills/pr-checks/scripts/sonar-issues.mjs [--pr <number>] [--branch <name>]
  *
  * - Waits for the SonarQube Cloud check on the current commit to finish.
  * - Prints the quality gate status and every open issue, worst first.
  * Exit codes: 0 = no open issues, 1 = issues found, 2 = could not get results.
  *
  * Works without a token because the project is public.
- * The logic lives in scripts/lib/sonar.mjs (unit tested); this file is only I/O glue.
+ * The logic lives in .kiro/skills/pr-checks/scripts/lib/sonar.mjs (unit tested); this file is only I/O glue.
  */
 import { readFileSync } from "node:fs";
 import { capture } from "./lib/cli.mjs";

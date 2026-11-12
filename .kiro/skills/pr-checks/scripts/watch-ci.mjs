@@ -2,7 +2,7 @@
 /**
  * Watch the GitHub Actions run for the current commit and report the result.
  *
- * Usage: node scripts/watch-ci.mjs [branch]
+ * Usage: node .kiro/skills/pr-checks/scripts/watch-ci.mjs [branch]
  *
  * - Finds the run whose head commit matches local HEAD (so an old run is never mistaken for this one).
  * - Waits for the run to start, then streams it with `gh run watch`.

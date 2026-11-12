@@ -10,7 +10,7 @@ import {
   normalizeGateStatus,
   parseArgs,
   parseProjectKey,
-} from "../scripts/lib/sonar.mjs";
+} from "../.kiro/skills/pr-checks/scripts/lib/sonar.mjs";
 
 const key = "RmdanJr_QuestHire";
 
