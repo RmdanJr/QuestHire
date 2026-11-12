@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   buildGateUrl,
   buildIssuesUrl,
+  cleanText,
   collectReport,
   extractIssues,
   findCompletedCheck,
   formatIssues,
+  normalizeGateStatus,
   parseArgs,
   parseProjectKey,
 } from "../scripts/lib/sonar.mjs";
@@ -175,5 +177,59 @@ describe("collectReport", () => {
     await expect(
       collectReport({ projectKey: key, scope: { branch: "main" }, fetchJson }),
     ).rejects.toThrow("HTTP 500");
+  });
+});
+
+describe("log injection protection", () => {
+  it("replaces control characters so a response cannot forge log lines", () => {
+    expect(cleanText("ok\nFAKE: quality gate passed\r\u001b[31mred")).toBe(
+      "ok FAKE: quality gate passed  [31mred",
+    );
+    expect(cleanText("tab\there")).toBe("tab here");
+  });
+
+  it("leaves normal text, unicode and punctuation alone", () => {
+    expect(cleanText("Use <meter> instead of \"role\" · ✓")).toBe("Use <meter> instead of \"role\" · ✓");
+  });
+
+  it("handles null and undefined", () => {
+    expect(cleanText(null)).toBe("");
+    expect(cleanText(undefined)).toBe("");
+  });
+
+  it("only passes known quality gate statuses", () => {
+    for (const status of ["OK", "WARN", "ERROR", "NONE"]) {
+      expect(normalizeGateStatus(status)).toBe(status);
+    }
+    expect(normalizeGateStatus("OK\nFAKE")).toBe("unknown");
+    expect(normalizeGateStatus(undefined)).toBe("unknown");
+    expect(normalizeGateStatus(42)).toBe("unknown");
+  });
+
+  it("sanitizes every field of a formatted issue", () => {
+    const [line] = formatIssues(
+      [
+        {
+          severity: "MAJOR\n",
+          type: "X",
+          rule: "a:1\n",
+          component: `${key}:src/f.ts\n`,
+          line: 4,
+          message: "bad\nINJECTED LINE",
+        },
+      ],
+      key,
+    );
+    expect(line).not.toMatch(/[\n\r]/);
+    expect(line).toContain("bad INJECTED LINE");
+  });
+
+  it("reports an unrecognised gate status as unknown in the report", async () => {
+    const fetchJson = async (url: string) =>
+      url.includes("project_status")
+        ? { projectStatus: { status: "ERROR\nFORGED" } }
+        : { issues: [] };
+    const report = await collectReport({ projectKey: key, scope: { branch: "main" }, fetchJson });
+    expect(report.gateStatus).toBe("unknown");
   });
 });

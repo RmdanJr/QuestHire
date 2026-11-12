@@ -7,6 +7,29 @@ export const SONAR_BASE = "https://sonarcloud.io";
 export const SONAR_CHECK_APP = "sonarqubecloud";
 
 const SEVERITY_ORDER = ["BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"];
+const KNOWN_GATE_STATUSES = ["OK", "WARN", "ERROR", "NONE"];
+
+/**
+ * Makes text from a remote API safe to print: control characters (newlines, escapes)
+ * become spaces, so a response cannot forge extra log lines (log injection, S5145).
+ * @param {unknown} value
+ * @returns {string}
+ */
+export function cleanText(value) {
+  return Array.from(String(value ?? ""), (ch) => {
+    const code = ch.codePointAt(0) ?? 0;
+    return code < 32 || code === 127 ? " " : ch;
+  }).join("");
+}
+
+/**
+ * Only known quality gate statuses are passed through; anything else is "unknown".
+ * @param {unknown} status
+ * @returns {string}
+ */
+export function normalizeGateStatus(status) {
+  return typeof status === "string" && KNOWN_GATE_STATUSES.includes(status) ? status : "unknown";
+}
 
 /**
  * @param {string} propertiesText contents of sonar-project.properties
@@ -88,9 +111,9 @@ export function formatIssues(issues, projectKey) {
         (a.line ?? 0) - (b.line ?? 0),
     )
     .map((issue) => {
-      const file = issue.component.replace(`${projectKey}:`, "");
-      const where = issue.line ? `${file}:${issue.line}` : file;
-      return `[${issue.severity}] ${issue.rule} ${where} - ${issue.message}`;
+      const file = cleanText(issue.component).replace(`${projectKey}:`, "");
+      const where = issue.line ? `${file}:${Number(issue.line)}` : file;
+      return `[${cleanText(issue.severity)}] ${cleanText(issue.rule)} ${where} - ${cleanText(issue.message)}`;
     });
 }
 
@@ -126,7 +149,7 @@ export async function collectReport({ projectKey, scope, fetchJson }) {
     fetchJson(buildIssuesUrl({ projectKey, ...scope })),
   ]);
   return {
-    gateStatus: gate?.projectStatus?.status ?? "unknown",
+    gateStatus: normalizeGateStatus(gate?.projectStatus?.status),
     lines: formatIssues(extractIssues(issuesJson), projectKey),
   };
 }
