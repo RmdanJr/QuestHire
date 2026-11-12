@@ -3,54 +3,56 @@
  * Submission guard (Kiroween rules):
  *  - /.kiro must exist at the repo root and must NOT be gitignored.
  *  - A LICENSE file must exist.
- *  - The resume fixture folder must stay ignored.
+ *  - The local fixture folder (.local/, holds the personal resume) must stay ignored.
+ *
+ * Ignore rules are evaluated with the `ignore` package, so this script does not
+ * need to spawn git (and works where git is not installed).
  */
-import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import ignore from "ignore";
 
-const root = process.cwd();
-const problems = [];
+/**
+ * @param {{ hasKiroDir: boolean, hasLicense: boolean, gitignoreText: string }} facts
+ * @returns {string[]} human-readable problems; empty when everything is fine
+ */
+export function findProblems({ hasKiroDir, hasLicense, gitignoreText }) {
+  const problems = [];
+  const matcher = ignore().add(gitignoreText);
 
-if (!existsSync(join(root, ".kiro"))) {
-  problems.push("Missing /.kiro directory at the repo root (required for submission).");
-}
-if (!existsSync(join(root, "LICENSE"))) {
-  problems.push("Missing LICENSE file (an open source license must be detectable).");
-}
-
-function isIgnored(path) {
-  try {
-    execFileSync("git", ["check-ignore", "-q", path], { cwd: root, stdio: "ignore" });
-    return true; // exit code 0 means the path is ignored
-  } catch {
-    return false;
+  if (!hasKiroDir) {
+    problems.push("Missing /.kiro directory at the repo root (required for submission).");
   }
-}
-
-if (existsSync(join(root, ".git"))) {
-  if (isIgnored(".kiro/steering/placeholder.md") || isIgnored(".kiro")) {
+  if (!hasLicense) {
+    problems.push("Missing LICENSE file (an open source license must be detectable).");
+  }
+  if (matcher.ignores(".kiro/steering/product.md") || matcher.ignores(".kiro/hooks/x.json")) {
     problems.push("/.kiro is gitignored. Remove it from .gitignore (could disqualify the submission).");
   }
-  if (!isIgnored(".local/fixtures/resume.pdf")) {
+  if (!matcher.ignores(".local/fixtures/resume.pdf")) {
     problems.push(".local/ is not gitignored. Personal resume fixtures could be committed.");
   }
+  return problems;
 }
 
-const gitignore = existsSync(join(root, ".gitignore"))
-  ? readFileSync(join(root, ".gitignore"), "utf8")
-  : "";
-const activeLines = gitignore
-  .split(/\r?\n/)
-  .map((l) => l.trim())
-  .filter((l) => l && !l.startsWith("#"));
-if (activeLines.some((l) => /^\/?\.kiro\/?\*{0,2}$/.test(l))) {
-  problems.push(".gitignore contains an active .kiro rule.");
+function main() {
+  const root = process.cwd();
+  const gitignorePath = join(root, ".gitignore");
+  const problems = findProblems({
+    hasKiroDir: existsSync(join(root, ".kiro")),
+    hasLicense: existsSync(join(root, "LICENSE")),
+    gitignoreText: existsSync(gitignorePath) ? readFileSync(gitignorePath, "utf8") : "",
+  });
+
+  if (problems.length > 0) {
+    console.error("Repo guard failed:");
+    for (const p of problems) console.error(" - " + p);
+    process.exit(1);
+  }
+  console.log("Repo guard OK: .kiro tracked, LICENSE present, local fixtures ignored.");
 }
 
-if (problems.length > 0) {
-  console.error("Repo guard failed:");
-  for (const p of problems) console.error(" - " + p);
-  process.exit(1);
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  main();
 }
-console.log("Repo guard OK: .kiro tracked, LICENSE present, local fixtures ignored.");
