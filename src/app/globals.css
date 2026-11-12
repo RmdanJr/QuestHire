@@ -96,26 +96,19 @@ h3 {
 
 .flame {
   transform-origin: 50% 90%;
-  animation: flicker 1.6s ease-in-out infinite;
 }
 
-.fog {
-  animation: drift 28s ease-in-out infinite;
-}
-
-/* Reduced motion: remove decorative animation and transitions. */
-@media (prefers-reduced-motion: reduce) {
-  .flame,
-  .fog {
-    animation: none;
+/*
+ * Decorative animation is opt-in: it only runs for users who have not asked
+ * for reduced motion. No !important is needed because nothing animates by default.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .flame {
+    animation: flicker 1.6s ease-in-out infinite;
   }
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
+
+  .fog {
+    animation: drift 28s ease-in-out infinite;
   }
 }
 
