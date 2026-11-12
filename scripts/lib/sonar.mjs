@@ -7,16 +7,21 @@ export const SONAR_BASE = "https://sonarcloud.io";
 export const SONAR_CHECK_APP = "sonarqubecloud";
 
 const SEVERITY_ORDER = ["BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"];
-const KNOWN_GATE_STATUSES = ["OK", "WARN", "ERROR", "NONE"];
+const KNOWN_GATE_STATUSES = new Set(["OK", "WARN", "ERROR", "NONE"]);
 
 /**
  * Makes text from a remote API safe to print: control characters (newlines, escapes)
  * become spaces, so a response cannot forge extra log lines (log injection, S5145).
+ * Only strings and numbers are printed; any other value (objects, null) becomes an
+ * empty string instead of "[object Object]".
  * @param {unknown} value
  * @returns {string}
  */
 export function cleanText(value) {
-  return Array.from(String(value ?? ""), (ch) => {
+  let text = "";
+  if (typeof value === "string") text = value;
+  else if (typeof value === "number") text = String(value);
+  return Array.from(text, (ch) => {
     const code = ch.codePointAt(0) ?? 0;
     return code < 32 || code === 127 ? " " : ch;
   }).join("");
@@ -28,7 +33,7 @@ export function cleanText(value) {
  * @returns {string}
  */
 export function normalizeGateStatus(status) {
-  return typeof status === "string" && KNOWN_GATE_STATUSES.includes(status) ? status : "unknown";
+  return typeof status === "string" && KNOWN_GATE_STATUSES.has(status) ? status : "unknown";
 }
 
 /**

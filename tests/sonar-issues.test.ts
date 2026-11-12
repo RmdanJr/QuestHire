@@ -197,6 +197,12 @@ describe("log injection protection", () => {
     expect(cleanText(undefined)).toBe("");
   });
 
+  it("prints numbers but never [object Object] for other types", () => {
+    expect(cleanText(42)).toBe("42");
+    expect(cleanText({ a: 1 })).toBe("");
+    expect(cleanText(["x"])).toBe("");
+  });
+
   it("only passes known quality gate statuses", () => {
     for (const status of ["OK", "WARN", "ERROR", "NONE"]) {
       expect(normalizeGateStatus(status)).toBe(status);
