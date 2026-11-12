@@ -36,14 +36,22 @@ export function findProblems({ hasKiroDir, hasLicense, gitignoreText }) {
   return problems;
 }
 
-function main() {
-  const root = process.cwd();
+/**
+ * Reads the facts from a repo folder on disk and returns the problems found.
+ * @param {string} root absolute path of the repo root
+ * @returns {string[]}
+ */
+export function checkRepo(root) {
   const gitignorePath = join(root, ".gitignore");
-  const problems = findProblems({
+  return findProblems({
     hasKiroDir: existsSync(join(root, ".kiro")),
     hasLicense: existsSync(join(root, "LICENSE")),
     gitignoreText: existsSync(gitignorePath) ? readFileSync(gitignorePath, "utf8") : "",
   });
+}
+
+function main() {
+  const problems = checkRepo(process.cwd());
 
   if (problems.length > 0) {
     console.error("Repo guard failed:");
