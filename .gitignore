@@ -52,3 +52,6 @@ next-env.d.ts
 
 # IMPORTANT: the /.kiro directory MUST stay committed (Kiroween submission requirement).
 # Do not add .kiro to this file. A hook and a test verify this.
+
+# Test coverage output
+/coverage/

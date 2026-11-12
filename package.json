@@ -9,11 +9,12 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest --run",
+    "test:coverage": "vitest --run --coverage",
     "test:watch": "vitest",
     "db:validate": "prisma validate",
     "db:generate": "prisma generate",
     "check:kiro": "node scripts/check-kiro.mjs",
-    "check": "npm run typecheck && npm run lint && npm run test && npm run db:validate && npm run check:kiro",
+    "check": "npm run typecheck && npm run lint && npm run test:coverage && npm run db:validate && npm run check:kiro",
     "postinstall": "prisma generate"
   },
   "dependencies": {

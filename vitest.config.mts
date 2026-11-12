@@ -13,5 +13,22 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     include: ["src/**/*.test.{ts,tsx}", "tests/**/*.test.{ts,tsx}"],
     css: false,
+    coverage: {
+      provider: "v8",
+      // `include` also lists untested files, so gaps stay visible in the report.
+      include: ["src/**/*.{ts,tsx}", "scripts/check-kiro.mjs"],
+      exclude: ["**/*.test.{ts,tsx}", "src/generated/**", "**/*.d.ts"],
+      reporter: ["text-summary", "text", "lcov", "json-summary"],
+      reportsDirectory: "coverage",
+      // Gate: fail the run if coverage drops below these floors.
+      // Measured baseline is ~88% statements / 91% lines; floors sit a few points
+      // below so normal refactors pass but real regressions do not. Raise over time.
+      thresholds: {
+        statements: 80,
+        branches: 80,
+        functions: 80,
+        lines: 85,
+      },
+    },
   },
 });
