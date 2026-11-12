@@ -18,13 +18,11 @@ This file is the source of truth for the build plan. A new chat can be asked to 
 - CI (`.github/workflows/ci.yml`): job `check` (required by branch protection on `main`, do not rename) runs `npm ci --ignore-scripts`, Prisma generate, `npm run check` (typecheck, lint, tests with coverage gate, prisma validate, repo guard), prod `npm audit`, build. Job `node22` proves the app builds on Node 22 (Amplify's version). Optional SonarQube Cloud scan needs a `SONAR_TOKEN` secret (not set yet).
 - Coverage gate in `vitest.config.mts`: statements 80, branches 80, functions 80, lines 85.
 - Scripts: `npm run ci:watch` (watch the CI run for HEAD), `npm run sonar:issues` (quality gate and open issues for the PR), `npm run check:kiro` (submission guard).
-- Kiro: steering in `.kiro/steering`, hooks in `.kiro/hooks` (typecheck on save, prisma validate on schema save, repo guard after a spec task, watch CI and fix Sonar issues after `gh pr create`), agents in `.kiro/agents` (`design-system`, `aws-setup`), Task 1 spec in `.kiro/specs/foundation-and-design-system`.
+- Kiro: see `.kiro/README.md` for the full index of steering, specs, hooks and agents. Task 1 spec: `.kiro/specs/task-01-foundation-and-design-system`.
+- AWS: Amplify app `questhire` deploys `main` on every push; $10/month budget alarm; work as IAM user `hassan`, never root. Details, commands and what is not created yet: `aws-and-deployment.md`.
 
-### AWS (us-east-1)
-- Work as the IAM user `hassan` (AdministratorAccess). **Never use root.** Sign in with `aws login`; check with `aws sts get-caller-identity` (the ARN must not end in `:root`).
-- Budget `questhire-monthly`: $10/month, email alerts at 50% and 100% actual and 100% forecast.
-- Amplify app `questhire` (id `d1dlm8l72zqe87`), platform `WEB_COMPUTE`, branch `main` (Next.js - SSR, production, auto-build on push). Env vars: `_LIVE_UPDATES` pins Node 22, `GUEST_TOKEN_CAP=60000`. Amplify rejects Node 24, so `amplify.yml` must keep working on Node 22. Runtime env vars reach the SSR server only through the `.env.production` step in `amplify.yml`; add new server vars to that allow-list.
-- Not created yet: S3 resume bucket, app IAM role for Bedrock/S3, Judge0 on EC2, a database.
+### Related steering
+`kiro-workflow.md` (how to use Kiro and organize `.kiro`), `dev-environment.md` (Windows/PowerShell and tooling gotchas), `aws-and-deployment.md`, `research-and-licenses.md` (vetted sources, licenses, prices), `kiroween-submission.md` (rules, judging, checklist).
 
 ## Decisions (do not re-litigate without the user)
 - **Theme:** "The Crypt of the Hiring Manager", a haunted gothic library in dark storybook illustration style (painterly, warm candlelight against deep purple and teal). Every spooky element serves a function (candles = HP, hourglass = countdown, moon = readiness, runes = mastery, the Archivist = lessons and hints, wardrobe = resume upload as dressing in a role costume, boss door with the company name = the real interview, ectoplasm path = route through the plan's days).
@@ -132,15 +130,15 @@ This file is the source of truth for the build plan. A new chat can be asked to 
 
 ## How to work on a task
 1. Read this file and the relevant steering. Confirm the task's assumptions that need checking (prices, licenses, availability) and say what you verified.
-2. Create a spec under `.kiro/specs/<task-name>/` (requirements, then design and tasks) before larger work.
+2. Create a spec under `.kiro/specs/task-NN-<name>/` (requirements, then design and tasks) before larger work, following `kiro-workflow.md`.
 3. Branch from an up-to-date `main` (for example `feat/task-2-art`). Never push to `main` directly.
 4. Make small commits with messages under 50 characters. Git author for this repo is `RmdanJrx@gmail.com` (set locally).
 5. Verify before each push: `npm run check` and `npm run build`. CI starts from a clean checkout, so test from a clean copy when changing install or build steps.
 6. Open a PR with `gh pr create` (body: summary, testing, not done). The watch hook then runs `node scripts/watch-ci.mjs` and `node scripts/sonar-issues.mjs`; fix failures at the root cause, never by silencing rules or lowering thresholds.
-7. When the task is merged, update **Current status** above in the same or a follow-up PR.
+7. When the task is merged, update **Current status** above, tick the spec's `tasks.md`, and append the Kiro features used to `docs/kiro-usage-log.md`.
 
 ## Open items
 - User to rotate the root password that was pasted in an earlier chat, and enable MFA for root and `hassan`.
 - `SONAR_TOKEN` secret and turning off SonarQube Cloud Automatic Analysis, so CI can upload coverage.
 - 7 moderate `npm audit` findings in dev tooling (`@typescript-eslint` chain); `eslint@9` flagged deprecated.
-- Kiro permissions: the user may add a workspace `permissions.yaml` so shell commands run without prompts (see the chat where this was set up).
+- Kiro permissions: the user was given a workspace `permissions.yaml` (allow all shell commands, with an `ask` list for deletes, force pushes, pushes to `main`, `gh api` writes, AWS writes/IAM and installs) to paste into `~/.kiro/workspace-roots/<hash>/permissions.yaml`; agents cannot write it themselves. Not confirmed applied.
