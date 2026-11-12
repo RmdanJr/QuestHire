@@ -15,31 +15,40 @@ function litPath(f: number, r: number, c: number): string {
   return `M ${c} ${c - r} A ${r} ${r} 0 0 1 ${c} ${c + r} A ${rx} ${r} 0 0 ${sweep} ${c} ${c - r} Z`;
 }
 
-/** Readiness meter. New moon = unprepared, full moon = ready. */
-export function MoonMeter({ value, label = "Readiness", size = 96, className }: Readonly<MoonMeterProps>) {
+/**
+ * Readiness meter. New moon = unprepared, full moon = ready.
+ * A visually hidden native <meter> carries the semantics; the moon is decorative.
+ */
+export function MoonMeter({
+  value,
+  label = "Readiness",
+  size = 96,
+  className,
+}: Readonly<MoonMeterProps>) {
   const f = moonIllumination(value);
   const rounded = Math.round(f * 100);
   const phase = moonPhaseName(value);
   const r = 44;
   const c = 50;
+  const text = `${rounded} percent, ${phase}`;
 
   return (
     <div className={["inline-flex flex-col items-center gap-1", className].filter(Boolean).join(" ")}>
-      <svg
-        role="meter"
+      <meter
+        className="sr-only"
+        min={0}
+        max={100}
+        value={rounded}
         aria-label={label}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={rounded}
-        aria-valuetext={`${rounded} percent, ${phase}`}
-        viewBox="0 0 100 100"
-        width={size}
-        height={size}
+        aria-valuetext={text}
       >
+        {text}
+      </meter>
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 100 100" width={size} height={size}>
         <circle cx={c} cy={c} r={r} fill="var(--crypt-raised)" stroke="var(--moon)" strokeWidth="1.5" />
         {f > 0 && <path d={litPath(f, r, c)} fill="var(--moon)" />}
       </svg>
-      <span className="text-sm text-parchment-dim">{`${rounded}% · ${phase}`}</span>
+      <span aria-hidden="true" className="text-sm text-parchment-dim">{`${rounded}% · ${phase}`}</span>
     </div>
   );
 }
