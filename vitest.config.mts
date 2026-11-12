@@ -16,7 +16,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       // `include` also lists untested files, so gaps stay visible in the report.
-      include: ["src/**/*.{ts,tsx}", "scripts/check-kiro.mjs", "scripts/lib/sonar.mjs", "scripts/lib/poll.mjs"],
+      include: ["src/**/*.{ts,tsx}", ".kiro/skills/submission-guard/scripts/check-submission.mjs", ".kiro/skills/pr-checks/scripts/lib/sonar.mjs", ".kiro/skills/pr-checks/scripts/lib/poll.mjs"],
       exclude: ["**/*.test.{ts,tsx}", "src/generated/**", "**/*.d.ts"],
       reporter: ["text-summary", "text", "lcov", "json-summary"],
       reportsDirectory: "coverage",
