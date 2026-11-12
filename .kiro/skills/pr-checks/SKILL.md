@@ -17,6 +17,7 @@ Two scripts that report what CI and SonarQube Cloud think of the current commit.
 
 - `watch-ci` matches the run by **commit SHA**, so it never reports an older run by mistake. It waits up to 2 minutes for the run to appear.
 - `sonar-issues` waits up to 5 minutes for the SonarQube Cloud check on the commit, then queries the public API (no token needed). The PR number comes from `gh pr view` unless passed in.
+- Sonar only reports on files it indexed. It skips dot folders, so **these scripts are not analysed by Sonar** (a deliberate choice: Kiro scripts stay in `.kiro`). ESLint, the tests in `tests/` and the coverage gate still cover them.
 
 ## How to use the results
 1. Fix CI first. CI starts from a clean checkout; reproduce from a clean copy before changing anything (see `dev-environment.md`).

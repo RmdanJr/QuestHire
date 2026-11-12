@@ -16,6 +16,11 @@ The developer machine is **Windows with PowerShell 5**. These cost real time onc
 - **`npm ci` can fail with `ENOTEMPTY` (errno -4051)** because of Windows file locking. Empty the folder with `robocopy <emptyDir> <target> /MIR`, delete it, then retry with `npm ci --ignore-scripts --prefer-offline --no-audit --maxsockets=2`. It is not a repo bug.
 - To test like CI, copy tracked files to a short path (for example `C:\qhc`) with `git ls-files -co --exclude-standard`, then run the CI steps there. Delete the copy afterwards.
 - Line-ending warnings (`LF will be replaced by CRLF`) are harmless.
+- **`git add -A -- <paths>` after `git mv` can silently stage only the renames.** Check `git diff --cached --stat` before each commit when files were moved, and don't hide git's output.
+
+## SonarQube Cloud
+- **It skips dot folders** for code analysis (hidden files only go to the secrets scan). Scripts in `.kiro/skills/*/scripts/` are therefore not analysed by Sonar; we accepted that and rely on ESLint, tests and the coverage gate. Verified on PR #3: Sonar indexed 6 scripts in `scripts/` on `main` and none after the move to `.kiro`.
+- Check what Sonar actually indexed with `https://sonarcloud.io/api/components/tree?component=RmdanJr_QuestHire&pullRequest=<n>&qualifiers=FIL`. A green gate on files it never indexed means nothing.
 
 ## Framework and tooling quirks
 - **Next.js 16** is newer than most training data; read `node_modules/next/dist/docs/` first.

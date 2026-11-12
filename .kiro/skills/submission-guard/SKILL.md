@@ -23,6 +23,7 @@ Runs as part of `npm run check` (and therefore in CI) and after every spec task 
 ## How it works
 - `findProblems({ hasKiroDir, hasLicense, gitignoreText })` is pure; `checkRepo(root)` reads the facts from disk. Both are tested in `tests/check-submission.test.ts`, including real temporary folders.
 - Ignore rules are evaluated with the `ignore` package (the same rules git uses), so the script never spawns `git`.
+- SonarQube Cloud skips dot folders, so this script is not analysed by Sonar; ESLint, tests and the coverage gate cover it.
 
 ## If it fails
 Fix the repo, not the check: remove the `.kiro` rule from `.gitignore`, restore `LICENSE`, or re-add `/.local/` to `.gitignore`. Never weaken the checks.
