@@ -10,9 +10,9 @@ export function parseHex(hex: string): [number, number, number] {
   if (!match) throw new Error(`Invalid hex color: ${hex}`);
   const value = match[1];
   return [
-    parseInt(value.slice(0, 2), 16),
-    parseInt(value.slice(2, 4), 16),
-    parseInt(value.slice(4, 6), 16),
+    Number.parseInt(value.slice(0, 2), 16),
+    Number.parseInt(value.slice(2, 4), 16),
+    Number.parseInt(value.slice(4, 6), 16),
   ];
 }
 
