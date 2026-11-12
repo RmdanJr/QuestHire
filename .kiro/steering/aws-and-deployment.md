@@ -20,6 +20,11 @@ description: QuestHire AWS account setup, Amplify Hosting deployment, budget and
 - App `questhire`, id `d1dlm8l72zqe87`, us-east-1, platform `WEB_COMPUTE` (SSR). Branch `main`: framework `Next.js - SSR`, stage PRODUCTION, auto-build on push.
 - Live URL: https://main.d1dlm8l72zqe87.amplifyapp.com. Smoke test `/`, `/gallery` and `/api/health` (expect `{"status":"ok","db":"unconfigured"}` until a database exists).
 - Connected to GitHub with the `gh` token passed once at app creation (not stored in the repo).
+- **PR previews are on** for `main` (`enablePullRequestPreview`). Each PR into `main` gets its own temporary branch and URL (`https://pr-<number>.d1dlm8l72zqe87.amplifyapp.com`), deleted when the PR closes. Each open PR counts toward Amplify's 50-branches-per-app quota, so close stale PRs. Preview builds cost build minutes like any other build.
+- **Preview security (public repo):** anyone can open a PR, and its code runs in a preview build with the app's settings. So:
+  - Keep **no IAM service role and no app-level compute role** on this app. If the app later needs AWS access at runtime (Bedrock, S3), attach a **compute role to the `main` branch only**, never at app level, as AWS recommends for public repos with previews.
+  - **Never put secrets in app-level environment variables** (they reach preview builds). Set secrets such as `DATABASE_URL` as **branch-level variables on `main`**, or in AWS Secrets Manager read by the `main` compute role.
+  - AWS docs are inconsistent here: one paragraph says previews can't be enabled for `WEB_COMPUTE` apps in public repos, the next describes doing it with a branch-level compute role. Amplify accepted the setting for this app (no roles attached).
 - Build spec is `amplify.yml` in the repo.
   - **Node 22 only.** Amplify rejects Node 24 and `nvm use` cannot override it. The app env var `_LIVE_UPDATES=[{"pkg":"node","type":"nvm","version":"22"}]` pins Node 22. CI's `node22` job proves the app builds and tests on 22.
   - **SSR runtime env vars:** console env vars are not passed to the running Next.js server. The build step appends an allow-list (`AWS_REGION|DATABASE_URL|GUEST_TOKEN_CAP`) to `.env.production`. Add new server-side vars to that regex.
