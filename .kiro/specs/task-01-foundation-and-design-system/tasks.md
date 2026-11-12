@@ -14,6 +14,6 @@
 - [x] 8. MIT license, `.gitignore` for `.local/`, and the repo guard
   - _Requirements: 5.1, 5.2_
 - [x] 9. Kiro steering, hooks, the `design-system` agent and this spec
-- [x] 10. CI workflow, branch protection on `main` (required check `check`) and coverage gate
+- [x] 10. CI workflow, branch protection on `main` (required checks "Lint, test and build (Node 24)" and "Amplify compatibility (Node 22)") and coverage gate
 - [x] 11. Fix all SonarQube Cloud findings (19 from PR #1, then 7 more found in new code)
 - [x] 12. Deploy to AWS Amplify and smoke-test `/`, `/gallery` and `/api/health` on the live URL

@@ -16,7 +16,7 @@ Where things live and where new code goes. Stack and coding rules: `tech.md`.
 | `public/` | Static files served as-is (art and sound from Task 2 go under `public/art/` and `public/sound/`) |
 | `docs/` | Project docs, including `kiro-usage-log.md` for the submission write-up |
 | `.kiro/` | Kiro steering, specs, skills, hooks and agents (index in `.kiro/README.md`) |
-| `.github/workflows/` | CI (`ci.yml`; job `check` is required on `main`) |
+| `.github/workflows/` | CI (`ci.yml`; both jobs are required checks on `main`) |
 | `amplify.yml` | AWS Amplify Hosting build spec (Node 22) |
 | `.local/` | Gitignored personal files (the user's resume fixture). Never commit |
 | `src/generated/`, `coverage/`, `.next/` | Generated output, gitignored |

@@ -33,7 +33,7 @@ The developer machine is **Windows with PowerShell 5**. These cost real time onc
 
 ## Git and GitHub
 - Repo-local git email is `RmdanJrx@gmail.com`; the global one is a work address. Never change global config, and check `git log --format=%ae` before pushing.
-- `main` is protected (required check `check`). Work on branches and merge through PRs.
+- `main` is protected: the CI checks "Lint, test and build (Node 24)" and "Amplify compatibility (Node 22)" must pass. Required checks match the job `name:` in `ci.yml`, so renaming a job means updating branch protection in the same change. Work on branches and merge through PRs.
 - `gh` is signed in as `RmdanJr`. Pass its token to other services only without printing it.
 
 ## Kiro itself
