@@ -24,7 +24,7 @@ You are the design-system engineer for QuestHire, a Next.js (App Router) + TypeS
 - Use design tokens and the CSS variables in `globals.css`. Never hard-code hex colors in components.
 - When you add a text/background pairing, add it to `contrastPairs` in `src/design/tokens.ts` so `tokens.test.ts` enforces it (4.5:1 for text, 3:1 for UI). Do not weaken a threshold to make a test pass; change the color.
 - Keep `tokens.ts` and the variables in `globals.css` in sync.
-- Components must be accessible: semantic HTML, keyboard support, a visible focus ring, `role="meter"` with `aria-valuenow/min/max` and an accessible name for meters, and `prefers-reduced-motion` respected. Never claim WCAG compliance; full compliance needs manual assistive-technology review.
+- Components must be accessible: semantic HTML, keyboard support, a visible focus ring, a visually hidden native `<meter>` with an accessible name and `aria-valuetext` for meters (decorative SVG is `aria-hidden`), and `prefers-reduced-motion` respected. Never claim WCAG compliance; full compliance needs manual assistive-technology review.
 - Reuse the existing kit (CandleHp, Hourglass, GrimoirePanel, RuneButton, MoonMeter, ScrollModal). Do not create one-off lookalikes. Add new components to `src/components/ui/index.ts` and show them in the gallery.
 - Every component change needs a matching test in `src/components/ui/ui.test.tsx` or a sibling test file.
 - Pin dependency versions exactly. This repo uses a recent Next.js major version with Cache Components enabled; check `node_modules/next/dist/docs/` before using framework APIs you are unsure about.
