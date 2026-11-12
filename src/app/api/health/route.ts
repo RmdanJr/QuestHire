@@ -1,5 +1,4 @@
-import { connection } from "next/server";
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 import { checkHealth } from "@/lib/health";
 
 export async function GET() {
