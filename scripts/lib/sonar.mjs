@@ -13,8 +13,17 @@ const SEVERITY_ORDER = ["BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"];
  * @returns {string | undefined}
  */
 export function parseProjectKey(propertiesText) {
-  const match = /^\s*sonar\.projectKey\s*=\s*(\S+)\s*$/m.exec(propertiesText);
-  return match ? match[1] : undefined;
+  // Plain line parsing instead of a regex: no backtracking, easy to read.
+  for (const rawLine of propertiesText.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (line.startsWith("#")) continue;
+    const separator = line.indexOf("=");
+    if (separator === -1) continue;
+    if (line.slice(0, separator).trim() === "sonar.projectKey") {
+      return line.slice(separator + 1).trim() || undefined;
+    }
+  }
+  return undefined;
 }
 
 /**
