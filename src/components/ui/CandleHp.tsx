@@ -12,7 +12,7 @@ type CandleHpProps = {
  * HP as candles. A wrong answer snuffs one out, so the room gets darker.
  * Exposed to assistive tech as a meter with a text value.
  */
-export function CandleHp({ current, max, label = "Hit points", className }: CandleHpProps) {
+export function CandleHp({ current, max, label = "Hit points", className }: Readonly<CandleHpProps>) {
   const safeMax = Math.max(0, Math.floor(max));
   const lit = litCandles(current, safeMax);
 

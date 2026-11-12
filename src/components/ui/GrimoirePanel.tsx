@@ -16,7 +16,7 @@ export function GrimoirePanel({
   children,
   footer,
   className,
-}: GrimoirePanelProps) {
+}: Readonly<GrimoirePanelProps>) {
   const Heading = `h${headingLevel}` as "h2" | "h3" | "h4";
   return (
     <section

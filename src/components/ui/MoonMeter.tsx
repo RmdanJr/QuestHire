@@ -16,7 +16,7 @@ function litPath(f: number, r: number, c: number): string {
 }
 
 /** Readiness meter. New moon = unprepared, full moon = ready. */
-export function MoonMeter({ value, label = "Readiness", size = 96, className }: MoonMeterProps) {
+export function MoonMeter({ value, label = "Readiness", size = 96, className }: Readonly<MoonMeterProps>) {
   const f = moonIllumination(value);
   const rounded = Math.round(f * 100);
   const phase = moonPhaseName(value);

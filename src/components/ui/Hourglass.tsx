@@ -17,7 +17,7 @@ export function Hourglass({
   totalDays,
   label = "Time until your interview",
   className,
-}: HourglassProps) {
+}: Readonly<HourglassProps>) {
   const fill = hourglassFill(daysLeft, totalDays);
   const safeTotal = Math.max(0, Math.floor(totalDays));
   const safeLeft = Math.min(safeTotal, Math.max(0, Math.floor(daysLeft)));
