@@ -7,7 +7,6 @@ export const SONAR_BASE = "https://sonarcloud.io";
 export const SONAR_CHECK_APP = "sonarqubecloud";
 
 const SEVERITY_ORDER = ["BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"];
-const KNOWN_GATE_STATUSES = new Set(["OK", "WARN", "ERROR", "NONE"]);
 
 /**
  * Makes text from a remote API safe to print: control characters (newlines, escapes)
@@ -28,12 +27,25 @@ export function cleanText(value) {
 }
 
 /**
- * Only known quality gate statuses are passed through; anything else is "unknown".
+ * Maps the remote quality gate status to one of our own constants. The returned value
+ * is always a literal from this function, never the remote string itself, so nothing
+ * from the response can reach the logs.
  * @param {unknown} status
- * @returns {string}
+ * @returns {"OK" | "WARN" | "ERROR" | "NONE" | "unknown"}
  */
 export function normalizeGateStatus(status) {
-  return typeof status === "string" && KNOWN_GATE_STATUSES.has(status) ? status : "unknown";
+  switch (status) {
+    case "OK":
+      return "OK";
+    case "WARN":
+      return "WARN";
+    case "ERROR":
+      return "ERROR";
+    case "NONE":
+      return "NONE";
+    default:
+      return "unknown";
+  }
 }
 
 /**
