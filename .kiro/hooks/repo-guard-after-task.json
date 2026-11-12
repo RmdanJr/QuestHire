@@ -4,10 +4,10 @@
     {
       "name": "Repo guard after each task",
       "trigger": "PostTaskExec",
-      "description": "Confirms /.kiro is tracked, LICENSE exists and personal fixtures stay ignored (Kiroween submission rules).",
+      "description": "Confirms /.kiro is tracked, LICENSE exists and personal fixtures stay ignored (Kiroween submission rules). Logic lives in the submission-guard skill.",
       "action": {
         "type": "command",
-        "command": "npm run check:kiro",
+        "command": "npm run check:submission",
         "timeout": 30
       }
     }
