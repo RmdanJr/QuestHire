@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Validate Prisma schema on save",
+      "trigger": "PostFileSave",
+      "description": "Validate the Prisma schema whenever it changes.",
+      "matcher": "prisma[\\\\/]schema\\.prisma$",
+      "action": {
+        "type": "command",
+        "command": "npm run db:validate",
+        "timeout": 60
+      }
+    }
+  ]
+}

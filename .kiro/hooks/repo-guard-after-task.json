@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Repo guard after each task",
+      "trigger": "PostTaskExec",
+      "description": "Confirms /.kiro is tracked, LICENSE exists and personal fixtures stay ignored (Kiroween submission rules).",
+      "action": {
+        "type": "command",
+        "command": "npm run check:kiro",
+        "timeout": 30
+      }
+    }
+  ]
+}
