@@ -52,3 +52,7 @@ A running record of how Kiro was used to build QuestHire. It feeds the Kiroween 
 ### Steering and spec practice (validated against the Kiro docs)
 - Renamed `engineering-conventions.md` to `tech.md` and added `structure.md`, matching Kiro's default foundation steering files (`product.md`, `tech.md`, `structure.md`).
 - Spec policy written into `kiro-workflow.md`: one feature spec per roadmap task, created in a Kiro spec session when the task starts (docs recommend multiple feature specs; up-front vs just-in-time is not documented). Requirements-first by default; design-first for Task 3 and Task 10; Quick Spec only for small work. Task 1's spec is an after-the-fact record, not a spec that guided the work.
+
+### Deployment previews and CI naming (end of session 1)
+- Turned on Amplify pull request previews from the CLI after checking AWS's public-repo guidance: the app keeps no IAM service role or compute role, and secrets must stay out of app-level environment variables. Previews needed the Amplify GitHub App (a manual console step), and an existing PR needed a close and reopen to get its first preview.
+- Renamed the CI jobs to "Lint, test and build (Node 24)" and "Amplify compatibility (Node 22)" and updated branch protection in the same change, so PRs never wait on a check name that no longer exists.

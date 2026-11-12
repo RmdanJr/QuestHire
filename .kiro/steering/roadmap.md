@@ -11,6 +11,7 @@ This file is the source of truth for the build plan. A new chat can be asked to 
 - **Done:** Task 1 (foundation and design system), plus CI hardening, SonarQube Cloud cleanup, coverage gate, and the first AWS Amplify deploy.
 - **Next:** Task 2 (art pipeline) or Task 3 (Bedrock LLM client and model spike). AWS access is ready for Task 3.
 - **Live app:** https://main.d1dlm8l72zqe87.amplifyapp.com (`/`, `/gallery`, `/api/health`).
+- **Every PR gets** two required CI checks ("Lint, test and build (Node 24)" and "Amplify compatibility (Node 22)"), SonarQube Cloud and GitGuardian checks, and an Amplify preview at `https://pr-<number>.d1dlm8l72zqe87.amplifyapp.com` (deleted when the PR closes). A PR opened before previews existed needs a close and reopen to get one.
 
 ### What exists today
 - Next.js 16 (App Router, Cache Components on), TypeScript, Tailwind 4, Framer Motion, Prisma 7 (empty schema), Zod 4, Vitest 5 + fast-check.
