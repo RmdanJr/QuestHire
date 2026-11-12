@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated output: not our code, and linting it only produces noise.
+    "coverage/**",
+    "src/generated/**",
   ]),
 ]);
 
