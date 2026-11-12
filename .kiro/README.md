@@ -1,6 +1,6 @@
 # .kiro
 
-Everything Kiro uses to build QuestHire. This folder must stay committed (Kiroween submission rule); `npm run check:kiro` fails if it is gitignored. Organization rules live in [`steering/kiro-workflow.md`](steering/kiro-workflow.md).
+Everything Kiro uses to build QuestHire. This folder must stay committed (Kiroween submission rule); `npm run check:submission` fails if it is gitignored. Organization rules live in [`steering/kiro-workflow.md`](steering/kiro-workflow.md).
 
 ## steering/
 | File | Inclusion | Purpose |
@@ -23,14 +23,22 @@ Everything Kiro uses to build QuestHire. This folder must stay committed (Kirowe
 
 New specs follow `task-NN-<name>` to match the roadmap.
 
+## skills/
+Workspace skills (`SKILL.md` plus a `scripts/` folder), the documented place for committed, executable helpers. Tooling still points at these paths: `package.json` scripts, `vitest.config.mts` coverage, `sonar-project.properties` sources, and the tests in `tests/`.
+
+| Skill | Command | What it does |
+|---|---|---|
+| [`pr-checks`](skills/pr-checks/SKILL.md) | `npm run ci:watch`, `npm run sonar:issues` | Watches the CI run for the current commit; reports the Sonar quality gate and open issues |
+| [`submission-guard`](skills/submission-guard/SKILL.md) | `npm run check:submission` | `/.kiro` tracked, LICENSE present, `.local/` ignored (also part of `npm run check`) |
+
 ## hooks/
 | Hook | Trigger | What it does |
 |---|---|---|
 | `typecheck-on-save` | PostFileSave `*.ts(x)` | `npm run typecheck` |
 | `prisma-validate-on-schema-save` | PostFileSave `prisma/schema.prisma` | `npm run db:validate` |
-| `repo-guard-after-task` | PostTaskExec | `npm run check:kiro` |
+| `repo-guard-after-task` | PostTaskExec | `npm run check:submission` (submission-guard skill) |
 | `update-roadmap-after-task` | PostTaskExec | Keeps roadmap status, spec checkboxes and the usage log current |
-| `watch-ci-after-pr` | PostToolUse after `gh pr create` | Watches CI, then fixes SonarQube Cloud findings |
+| `watch-ci-after-pr` | PostToolUse after `gh pr create` | Runs the pr-checks skill: watches CI, then fixes SonarQube Cloud findings |
 
 ## agents/
 | Agent | Use it for |

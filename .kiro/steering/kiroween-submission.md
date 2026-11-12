@@ -21,7 +21,7 @@ description: Kiroween 2026 hackathon rules, Costume Contest category, judging cr
 ## Submission checklist
 - [ ] Public **GitHub** repo (not GitLab/Bitbucket) with all source, assets and instructions.
 - [ ] Open-source license detectable in the repo's About section (MIT, already in place and detected by GitHub).
-- [ ] `/.kiro` at the repo root and **not** in `.gitignore` (enforced by `npm run check:kiro`).
+- [ ] `/.kiro` at the repo root and **not** in `.gitignore` (enforced by `npm run check:submission`).
 - [ ] URL to the working app (https://main.d1dlm8l72zqe87.amplifyapp.com). Judge login credentials go only in the private Devpost form.
 - [ ] Text description of features and functionality.
 - [ ] Demo video under 3 minutes, public on YouTube, showing the app working; no third-party trademarks or copyrighted music without permission.

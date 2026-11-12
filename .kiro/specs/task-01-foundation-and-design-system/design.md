@@ -14,7 +14,7 @@ A Next.js App Router app with a token-driven "Haunted Library" design system. Pu
 | Component kit | `src/components/ui` | CandleHp, Hourglass, MoonMeter, GrimoirePanel, RuneButton, ScrollModal |
 | Pages | `src/app/page.tsx`, `src/app/gallery` | Landing page and a live component gallery |
 | Health | `src/lib/health.ts`, `src/app/api/health/route.ts` | Injected pinger for tests; `await connection()` keeps it per request under Cache Components |
-| Repo guard | `scripts/check-kiro.mjs` | Pure `findProblems()` and `checkRepo(root)`; uses the `ignore` package instead of spawning git |
+| Repo guard | `.kiro/skills/submission-guard/scripts/check-submission.mjs` | Pure `findProblems()` and `checkRepo(root)`; uses the `ignore` package instead of spawning git |
 
 ## Key decisions
 - **Meters use a visually hidden native `<meter>`** carrying `min`, `max`, `value`, an accessible name and `aria-valuetext`; the SVG art is `aria-hidden`. This replaced `role="meter"` after SonarCloud rule S6819.

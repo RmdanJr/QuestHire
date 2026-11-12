@@ -42,3 +42,8 @@ A running record of how Kiro was used to build QuestHire. It feeds the Kiroween 
 
 ### Not used yet (planned)
 - MCP servers (browser screenshots for UI checks in Task 7/15), Kiro powers (AWS), Kiro CLI or Crew.
+
+### Skills (added at the end of session 1)
+- Moved the helper scripts into two workspace skills: `.kiro/skills/pr-checks` (CI watch and SonarQube Cloud report) and `.kiro/skills/submission-guard` (submission and privacy checks). Each has a `SKILL.md` that tells the agent when and how to use it.
+- Checked against the Kiro docs first (via the `introspect` sub-agent): skills are the documented place for committed scripts; there is no `.kiro/scripts/` convention, and powers install globally rather than per project.
+- Hooks now call `npm run` aliases instead of file paths, and both custom agents load the skills through `skill://` resources.

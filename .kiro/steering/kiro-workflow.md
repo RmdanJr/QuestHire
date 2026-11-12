@@ -10,7 +10,8 @@ Kiro usage is a scored judging criterion ("Technological Implementation"), so us
 - **Specs** for every roadmap task: `.kiro/specs/task-NN-<kebab-name>/` with `requirements.md` (EARS-style acceptance criteria), `design.md` and `tasks.md` (checkboxes linked to requirement numbers). Write the spec before code for anything bigger than a small fix, and tick tasks as they finish.
 - **Steering** for durable knowledge: conventions, decisions, gotchas and research. When something is learned the hard way in chat, save it to the right steering file before the session ends.
 - **Hooks** for repeatable checks instead of remembering them. Create hooks with the `createHook` tool, never by writing JSON by hand. Hooks only activate in the next session.
-- **Custom agents** in `.kiro/agents/` for recurring roles (`design-system`, `aws-setup`). Add one when a role keeps coming back.
+- **Custom agents** in `.kiro/agents/` for recurring roles (`design-system`, `aws-setup`). Add one when a role keeps coming back. List `skill://.kiro/skills/*/SKILL.md` in their `resources`; custom agents do not load skills by default.
+- **Skills** in `.kiro/skills/<name>/` (`SKILL.md` with `name` matching the folder and a `description`, plus `scripts/`) for deterministic, repeatable helpers. This is the documented place for committed scripts; there is no `.kiro/scripts/` convention. Keep pure logic in the skill's `scripts/lib/` with tests in the repo's `tests/` folder, and expose each script through an `npm run` alias so hooks and CI do not hard-code paths.
 - **Sub-agents:** `context-gatherer` for unfamiliar code, `introspect` for Kiro questions, `general-task-execution` for parallel work.
 - **Property-based tests** (fast-check) for every pure game rule.
 - **MCP and powers:** check whether one fits before building tooling (for example a browser MCP for UI screenshot checks in Task 7 or 15, an AWS power for infrastructure). Record what was tried.
@@ -31,6 +32,9 @@ Kiro usage is a scored judging criterion ("Technological Implementation"), so us
     research-and-licenses.md    vetted sources, licenses, prices      (auto)
     kiroween-submission.md hackathon rules and judging criteria       (auto)
   specs/task-NN-<name>/    requirements.md, design.md, tasks.md
+  skills/<name>/           SKILL.md + scripts/ (committed executable helpers)
+    pr-checks/             CI watch and SonarQube Cloud report
+    submission-guard/      Kiroween submission and privacy checks
   hooks/<verb>-<object>.json   created with createHook
   agents/<role>.md         custom agents
 ```
@@ -40,7 +44,7 @@ Kiro usage is a scored judging criterion ("Technological Implementation"), so us
 - **One topic per steering file.** Update the existing file instead of adding a near-duplicate. If a file grows past about 300 lines, split it and update this layout and `.kiro/README.md`.
 - **Pick the narrowest inclusion:** `always` only for rules needed in most chats; `fileMatch` for file-specific rules; `auto` (with `name` and `description`) for reference material.
 - **Never put secrets in `.kiro`:** no passwords, tokens, keys or the AWS account ID. `.kiro` is public in the repo.
-- **Never gitignore `.kiro`.** It is a submission requirement and `npm run check:kiro` enforces it.
+- **Never gitignore `.kiro`.** It is a submission requirement and `npm run check:submission` enforces it.
 - **Keep `.kiro/README.md` and the layout above in sync** whenever files are added, renamed or removed.
 
 ## Before ending a session

@@ -17,7 +17,7 @@ This file is the source of truth for the build plan. A new chat can be asked to 
 - Design tokens with contrast tests (`src/design`), component kit in `src/components/ui` (CandleHp, Hourglass, GrimoirePanel, RuneButton, MoonMeter, ScrollModal; meters are visually hidden native `<meter>` elements), landing page, `/gallery`, `/api/health`.
 - CI (`.github/workflows/ci.yml`): job `check` (required by branch protection on `main`, do not rename) runs `npm ci --ignore-scripts`, Prisma generate, `npm run check` (typecheck, lint, tests with coverage gate, prisma validate, repo guard), prod `npm audit`, build. Job `node22` proves the app builds on Node 22 (Amplify's version). Optional SonarQube Cloud scan needs a `SONAR_TOKEN` secret (not set yet).
 - Coverage gate in `vitest.config.mts`: statements 80, branches 80, functions 80, lines 85.
-- Scripts: `npm run ci:watch` (watch the CI run for HEAD), `npm run sonar:issues` (quality gate and open issues for the PR), `npm run check:kiro` (submission guard).
+- Scripts: `npm run ci:watch` (watch the CI run for HEAD), `npm run sonar:issues` (quality gate and open issues for the PR), `npm run check:submission` (submission guard).
 - Kiro: see `.kiro/README.md` for the full index of steering, specs, hooks and agents. Task 1 spec: `.kiro/specs/task-01-foundation-and-design-system`.
 - AWS: Amplify app `questhire` deploys `main` on every push; $10/month budget alarm; work as IAM user `hassan`, never root. Details, commands and what is not created yet: `aws-and-deployment.md`.
 
@@ -134,7 +134,7 @@ This file is the source of truth for the build plan. A new chat can be asked to 
 3. Branch from an up-to-date `main` (for example `feat/task-2-art`). Never push to `main` directly.
 4. Make small commits with messages under 50 characters. Git author for this repo is `RmdanJrx@gmail.com` (set locally).
 5. Verify before each push: `npm run check` and `npm run build`. CI starts from a clean checkout, so test from a clean copy when changing install or build steps.
-6. Open a PR with `gh pr create` (body: summary, testing, not done). The watch hook then runs `node scripts/watch-ci.mjs` and `node scripts/sonar-issues.mjs`; fix failures at the root cause, never by silencing rules or lowering thresholds.
+6. Open a PR with `gh pr create` (body: summary, testing, not done). The watch hook then runs `node .kiro/skills/pr-checks/scripts/watch-ci.mjs` and `node .kiro/skills/pr-checks/scripts/sonar-issues.mjs`; fix failures at the root cause, never by silencing rules or lowering thresholds.
 7. When the task is merged, update **Current status** above, tick the spec's `tasks.md`, and append the Kiro features used to `docs/kiro-usage-log.md`.
 
 ## Open items
